@@ -5,11 +5,13 @@ using LlamadaClass;
 using LocalClass;
 using ProvincialClass;
 using Enumerados;
+using Interfaces;
 
 namespace CentralitaClass {
-  public class Centralita {
+  public class Centralita : ISerializable {
     private List<Llamada> _listaDeLlamadas;
     protected string _razonSocial;
+    private string _ruta;
     
     public Centralita() {
       this._listaDeLlamadas = new List<Llamada>();
@@ -21,6 +23,17 @@ namespace CentralitaClass {
 
     public List<Llamada> Llamadas {
       get { return this._listaDeLlamadas; }
+      set { this._listaDeLlamadas = value; }
+    }
+
+    public string RazonSocial {
+      get { return this._razonSocial; }
+      set { this._razonSocial = value; }
+    }
+
+    public string RutaDelArchivo {
+      get { return this._ruta; }
+      set { this._ruta = value; }
     }
     
     public float GananciaPorTotal {
@@ -52,7 +65,7 @@ namespace CentralitaClass {
       this._listaDeLlamadas.Sort(Llamada.OrdenarPorDuracion);
     }
     
-    public void Mostrar() {
+    public override string ToString() {
       StringBuilder sb = new StringBuilder();
       sb.AppendLine($"Razon Social: {this._razonSocial}");
       sb.AppendLine($"Ganancia Total: {this.GananciaPorTotal}");
@@ -63,10 +76,30 @@ namespace CentralitaClass {
       sb.AppendLine();
 
       foreach(Llamada llamada in this._listaDeLlamadas) {
-        sb.AppendLine(llamada.Mostrar());
+        sb.AppendLine(llamada.ToString());
       }
       
-      Console.WriteLine(sb.ToString());
+      return sb.ToString();
+    }
+
+    private void AgregarLlamada(Llamada nuevaLlamada) {
+      this._listaDeLlamadas.Add(nuevaLlamada);
+    }
+
+    public static bool operator ==(Centralita central, Llamada nuevaLlamada) {
+      foreach(Llamada llamada in central._listaDeLlamadas) {
+        if (llamada == nuevaLlamada) return true;
+      }
+      return false;
+    }
+
+    public static bool operator !=(Centralita central, Llamada nuevaLlamada) {
+      return !(central == nuevaLlamada);
+    }
+
+    public static Centralita operator +(Centralita central, Llamada nuevaLlamada) {
+      if (central != nuevaLlamada) central.AgregarLlamada(nuevaLlamada);
+      return central;
     }
   }
 }

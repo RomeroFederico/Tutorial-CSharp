@@ -7,6 +7,10 @@ namespace ProvincialClass {
   public class Provincial : Llamada {
     
     protected Franja _franjaHoraria;
+
+    public Provincial() {
+
+    }
     
     public Provincial(string origen, Franja franja, float duracion, string destino)
       :base(origen, destino, duracion) {
@@ -16,12 +20,12 @@ namespace ProvincialClass {
     public Provincial(Franja franja, Llamada unaLlamada)
       :this(origen: unaLlamada.NroOrigen, destino: unaLlamada.NroDestino, duracion: unaLlamada.Duracion, franja: franja) {
     }
-    
-    public float CostoLlamada {
+
+    public override float CostoLlamada {
       get { return this.CalcularCosto();}
     }
     
-    public override void Mostrar() {
+    protected override string Mostrar() {
       StringBuilder sb = new StringBuilder();
       sb.Append(base.Mostrar());
       sb.AppendLine($"Franja Horaria: {this._franjaHoraria.ToString()}");
@@ -37,6 +41,22 @@ namespace ProvincialClass {
           return this._duracion * 1.25F;
         default:
           return this._duracion * 0.66F;
+      }
+    }
+
+    public override bool Equals(object obj) {
+      return obj is Provincial;
+    }
+
+    public override string ToString() {
+      return this.Mostrar();
+    }
+    
+    public override int GetHashCode()
+    {
+      unchecked
+      {
+        return this._duracion.GetHashCode() ^ this._nroDestino.GetHashCode() ^ this._nroOrigen.GetHashCode() ^ this._franjaHoraria.GetHashCode();
       }
     }
   }

@@ -1,11 +1,16 @@
 using System;
 using System.Text;
+using Interfaces;
 
 namespace LlamadaClass {
-  public class Llamada {
+  public abstract class Llamada {
     protected float _duracion;
     protected string _nroDestino;
     protected string _nroOrigen;
+
+    public Llamada() {
+
+    }
     
     public Llamada(string origen, string destino, float duracion) {
       this._nroOrigen = origen;
@@ -30,8 +35,12 @@ namespace LlamadaClass {
         return this._nroOrigen;
       }
     }
+
+    public abstract float CostoLlamada {
+      get;
+    }
     
-    public virtual void Mostrar() {
+    protected virtual string Mostrar() {
       StringBuilder sb = new StringBuilder();
       sb.AppendLine($"Origen: {this._nroDestino}");
       sb.AppendLine($"Destino: {this._nroOrigen}");
@@ -42,5 +51,24 @@ namespace LlamadaClass {
     public static int OrdenarPorDuracion(Llamada uno, Llamada dos) {
       return uno.Duracion.CompareTo(dos.Duracion);
     }
-  } 
+
+    public static bool operator == (Llamada uno, Llamada dos) {
+      return uno.Equals(dos) && uno._nroDestino == dos._nroDestino && uno._nroOrigen == dos._nroOrigen && uno._duracion == dos._duracion;
+    }
+
+    public static bool operator != (Llamada uno, Llamada dos) {
+      return !(uno == dos);
+    }
+    
+    public override bool Equals(object obj) {
+      return obj is Llamada;
+    }
+      
+    public override int GetHashCode() {
+      unchecked
+      {
+        return this._duracion.GetHashCode() ^ this._nroDestino.GetHashCode() ^ this._nroOrigen.GetHashCode() ;
+      }
+    }
+  }
 }
