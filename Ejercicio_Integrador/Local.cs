@@ -1,8 +1,12 @@
 using System;
 using System.Text;
 using LlamadaClass;
+using System.IO;
+using System.Runtime.Serialization;
 
 namespace LocalClass {
+
+  [Serializable()]
   public class Local : Llamada {
     
     protected float _costo;

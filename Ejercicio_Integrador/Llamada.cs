@@ -1,8 +1,12 @@
 using System;
 using System.Text;
 using Interfaces;
+using System.IO;
+using System.Runtime.Serialization;
 
 namespace LlamadaClass {
+
+  [Serializable()]
   public abstract class Llamada {
     protected float _duracion;
     protected string _nroDestino;

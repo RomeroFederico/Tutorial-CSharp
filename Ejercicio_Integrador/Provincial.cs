@@ -2,8 +2,12 @@ using System;
 using System.Text;
 using LlamadaClass;
 using Enumerados;
+using System.IO;
+using System.Runtime.Serialization;
 
 namespace ProvincialClass {
+
+  [Serializable()]
   public class Provincial : Llamada {
     
     protected Franja _franjaHoraria;

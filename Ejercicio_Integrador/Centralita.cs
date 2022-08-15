@@ -1,11 +1,15 @@
 using System;
 using System.Text;
+using System.Linq;
 using System.Collections.List;
 using LlamadaClass;
 using LocalClass;
 using ProvincialClass;
 using Enumerados;
 using Interfaces;
+using System.Xml;
+using System.Xml.Serialization;
+using Excepciones;
 
 namespace CentralitaClass {
   public class Centralita : ISerializable {
@@ -83,7 +87,17 @@ namespace CentralitaClass {
     }
 
     private void AgregarLlamada(Llamada nuevaLlamada) {
-      this._listaDeLlamadas.Add(nuevaLlamada);
+      this.Llamadas.Add(nuevaLlamada);
+      try {
+        if (this.GuardarEnArchivo(nuevaLlamada, true)) Console.WriteLine("\n>>> La llamada se ha registrado.\n");
+      }
+      catch (CentralitaException e) {
+        Console.WriteLine(ex.Message);
+        Console.WriteLine("Clase que lo provoco  : " + ex.NombreClase);
+        Console.WriteLine("Metodo que lo provoco : " + ex.NombreMetodo);
+        Console.WriteLine("Excepcion interna     : " + ex.ExcepcionInterna.Message + "\n");
+        Console.ReadKey();
+      }
     }
 
     public static bool operator ==(Centralita central, Llamada nuevaLlamada) {
@@ -100,6 +114,48 @@ namespace CentralitaClass {
     public static Centralita operator +(Centralita central, Llamada nuevaLlamada) {
       if (central != nuevaLlamada) central.AgregarLlamada(nuevaLlamada);
       return central;
+    }
+
+    public bool Serializarse() {
+      try {
+        using (XmlTextWriter writer = new XmlTextWriter(this._ruta, Encoding.UTF8)) {
+          XmlSerializer xmlS = new XmlSerializer(typeof Centralita);
+          xmlS.Serialize(writer, this);
+        }
+      }
+      catch(Exception e) {
+        throw new CentralitaException("Error en Serializar la Centralita. ", "Centralita", "Serializarse()", ex);
+      }
+      return true;
+    }
+
+    public bool DeSerializarse() {
+      try {
+        using (XmlTextReader reader = new XmlTextReader(this._ruta)) {
+          XmlSerializer xmlS = new XmlSerializer(typeof Centralita);
+          Centralita newCentralitaData = (Centralita) xmlS.Deserialize(reader);
+          this._listaDeLlamadas = newCentralitaData._listaDeLlamadas
+          this._razonSocial = newCentralitaData._razonSocial;
+        }
+      }
+      catch(Exception e) {
+        throw new CentralitaException("Error en Deserializar la Centralita del archivo XML. ", "Centralita", "DeSerializarse()", ex);
+      }
+      return true;
+    }
+
+    public bool GuardarEnArchivo(Llamada unaLlamada, bool agrego) {
+      try {
+        using (StreamWriter writer = new StreamWriter(this._ruta, agrego)) {
+          writer.WriteLine("/// Datos de la llamada ///");
+          writer.WriteLine("Fecha : " + DateTime.Now);
+          writer.WriteLine(unaLlamada.ToString());
+        }
+      }
+      catch (Exception ex) {
+        throw new CentralitaException("No se pudo escribir el archivo con la llamada. ", (unaLlamada is Local ? "Local" : "Provincial"), "AgregarLlamada()", ex);
+      }
+      return true;
     }
   }
 }
