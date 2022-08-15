@@ -9,6 +9,21 @@ namespace HelloWorld {
       Console.WriteLine("Hello World!");    // Imprimir en la consola con salto de linea.
     }
 
+    // Funciones Locales:
+    static void FunctionInsideAFunction() { // Es posible definir funciones dentro de otras.
+      string saludo = "Hola mundo!!!";
+
+      Saludar();                            // La funcion puede declararse en cualquier lado.
+
+      void Saludar() {                      // La misma no tiene modificadores.
+        Console.WriteLine(saludo);          // Puede utilizar variables del contexto del metodo 'padre',
+      }                                     // pero solo si se declararon previamente.
+
+      static void SaludarConMetodoEstatico() { // Tambien pueden definirse como estaticas.
+        Console.WriteLine("Hola Mundo!!!");    // La unica diferencia es que no pueden hacer referencia a variables fuera de su scope.
+      }                                        // Util cuando no se quiere manipular indebidamente variables 'ajenas'.
+    }
+
     static void TestVariables() {
       string stringVar = "Federico", apellido = "Romero";                     // Tipo_de_dato nombreDeVariable.
       Console.WriteLine("Hola, mi noimbre es " + stringVarngVar);             // Imprimir variables con interpolacion de strings.
@@ -89,6 +104,9 @@ namespace HelloWorld {
 
       names.Add("Otro nombre..."); // Inserto un elemento.
       names.Remove("Romero");      // Remueve un elemento y lo retorna, solo la primera ocurrencia. Si no lo encuentra, no hace nada y retorna false.
+      //names.RemoveAt(0);         // Remueve por indice.
+      names.RemoveAll(name => name.Length > 10) // Remueve todos los elementos que cumplan la condicion del delegado.
+      names.AddRange(new string[] { "Uno", "Dos", "Tres" }); // Insertado multiple con arrays.
 
       foreach(var name in names) {
         Console.WriteLine(name);

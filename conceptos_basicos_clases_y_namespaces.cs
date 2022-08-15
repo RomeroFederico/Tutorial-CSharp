@@ -30,21 +30,27 @@
 // internal: Accesible en todo el proyecto.
 // public: Accesible desde cualquier proyecto.
 // private: Por defecto, solo visible por la clase padre.
+// partial: La misma clase puede declararse multiples veces (en todos los casos con los mismos modificadores)
+//          Util cuando se desea separar una clase con un codigo muy extenso, o cuando se desea dividir la logica del mismo.
 
 public class Auto {
 
   private string _patente; // Por defecto, Private y protected -> _propiedad.
   public string color;
+  public List<Pasajero> pasejeros;
+  public readonly int id; // Solo puede aignarse su valor antes de estar disponible, es decir, antes de construirse el objeto.
+  public const string codigoPais; // Idem, pero con limitaciones con respecto a los posibles datos que pueda almacenar.
   // Modifadores
   // private: Solo la misma clase.
   // protected: Idem y clases derivadas.
   // internal: Todo el proyecto.
-  // internal protected: Idem o clases derivadas.
+  // protected internal: Todo el proyecto y clases derivadas, incluso en otros proyectos.
   // public: Cualquier miembro.
 
   public Auto(string patente, string color) {
     this._patente = patente;
     this.color = color;
+    this.id = 1;
   }
 
   // Metodos -> Con verbos.
@@ -65,6 +71,41 @@ public class Auto {
 
   public void SetPatente(string newPatente) {
     this._patente = newPatente;
+  }
+
+  // Parametros opcionales:
+  // Es posible no pasar ningun parametro y aun asi el metodo no lanzara una excepcion.
+  // Al igual que utilizar los parametros por defecto, deben colocarse al final de la lista de argumentos.
+  // Como maximo solo puede haber uno solo.
+  public void AgregarPasajeros(params Pasajero[] masPasajeros) {
+    foreach(Pasajero p in masPasajeros) {
+      this._pasajeros.Add(p);
+    }
+  }
+
+  // Por defecto, los argumetos son pasados con su valor.
+  // Agregano 'ref', el argumento se pasara como referencia.
+  // Al momento de llamar al metodo tambien debe utilizarse 'ref' => auto.ImprimirPatente(ref plantillaPatente);
+  public void ImprimirPatente(ref string patenteAEscribir) {
+    patenteAEscribir = this._patente;
+  }
+
+  // Idem a ref, pero el/los argumentos pasados deben inicializarse si o si.
+  // El argumeto pasado puede pasarse sin un valor asignado.
+  public void ImprimirPatenteSiOSi(out string patenteAEscribir) {
+    patenteAEscribir = this._patente;
+  }
+
+  // Idem a out y ref, pero el/los argumentos pasados no pueden cambiar su valor asignado.
+  // Util para aliviar la carga en el sistema, ya que no tienen que copiarse los datos como cuando se pasan como valores los argumentos.
+  public void ImprimirPatenteEnConsola(in string patenteAEscribir) {
+    Console.WriteLine(patenteAEscribir);
+  }
+
+  // Destructor:
+  // Se ejecutara
+  ~Auto() {
+    Console.WriteLine("Out..");
   }
 }
 

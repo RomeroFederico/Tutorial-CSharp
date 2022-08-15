@@ -1,5 +1,5 @@
 // Arrays:
-// Unidimensionales, multidimensionales o anidados (jagged).
+// Unidimensionales, multidimensionales o jagged (arrays con diferentes largos).
 // El valor por defecto de los tipos numericos es 0.
 // Mientras que para los tipos referenciales es nulo.
 
