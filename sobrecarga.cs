@@ -195,3 +195,24 @@ Centimetro sumaEnCentimetros = centimetros + metros;
 
 Console.WriteLine(sumaEnMetros.cantidad);
 Console.WriteLine(sumaEnCentimetros.cantidad);
+
+// Manejo de Nulos:
+// El operador ?? evalua si una expresion  dada es 'null' o no.
+// En caso de no ser nulo retorna la expresion, en caso contrario retorna el segundo argumento.
+Console.WriteLine("Hola " + (userSuppliedName ?? "Anonimo")); 
+
+// Manejo de Strings:
+string nombre = "Federico";
+Console.WriteLine($"Hola {nombre}");      // Interpolacion de strings.
+Console.WriteLine($"Hola \"{nombre}\"");  // Utilizacion de caracteres 'escapados'.
+Console.WriteLine(@"Mucho gusto, soy ""Antonio""");
+// VERBATIM. Se pueden usar todos los caracteres escapados.
+// Para utilizar comillas dobles, se las debe repetir, sino se interpretara como el finde la cadena.
+// Idem con llaves.
+
+double daysSinceMillenium = (DateTime.Now - new DateTime(2000, 1, 1)).TotalDays;  
+Console.WriteLine($"Today is {DateTime.Now:d} and {daysSinceMillenium:N2} days have passed since the last millennium!");
+// :d -> Formato NOMBRE_DIA, MES DIA, AÑO (Dependiendo en la configuracion del sitema para fechas).
+// :N2 -> Numero con separador de miles? y 2 decimales.
+Console.WriteLine($"Today is {DateTime.Now:yyyy-MM-dd}");
+// año, mes, dia.

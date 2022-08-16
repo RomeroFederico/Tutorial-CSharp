@@ -123,8 +123,64 @@ namespace HelloWorld {
         fibonacciNumbers.Add(fibonacciNumbers[fibonacciNumbers.Count - 1] + fibonacciNumbers[fibonacciNumbers.Count - 2]);
       }
 
-      foreach(var item in fibonacciNumbers)
+      foreach(var item in fibonacciNumbers) {
         Console.WriteLine(item);
       }
+    }
+
+    static void VarType() {
+      var exampleVar = "Hola";
+      // Se puede definir variables con el tipo var. Estas van a requerir ser asignadas a un valor al
+      // momento de declararse. El compilador interpretara el tipo de dato correcto con esta asignacion.
+      var exampleAnonymousType = new {
+        someData = 12,
+        etc = true
+      }; // Esto es especialmente util con tipos anonimos o con tipos redundates y/o muy largos.
+    }
+
+    static void DynamicType() {
+      dynamic exampleOne;           // Tambien existe el tipo dinamico.
+      dynamic exampleTwo = "123";   // Al igual que el anterior tipo, se puede asignar a cualquier valor.
+      dynamic exampleThree = 456;   // Pero no es necesario inicializarlo cuando se declara.
+
+      Console.WriteLine(exampleTwo.Length); // Se puede llamar a cualquier metodo y aun asi el compilador no nos alertara.
+      Console.WriteLine(exampleTwo.Length); // Recien cuando el programa se ejecute y se encuentre con algun problema, saltara la excepcion.
+      Console.WriteLine(exampleThree.Length);
+
+      string test = "Test";
+
+      dynamic exampleAnonymousType = new {
+        someData = 12,
+        etc = true,
+        test // Si se trabaja con una variable ya declarada, podemos asignarla directamente, creando un nuevo campo con el mismo nombre.
+      }; // Igualmente se puede utilizar con tipos anonimos.
+
+      exampleAnonymousType.attributeNotFound = "Incoming Error";
+      // Al ser del tipo dinamico, podemos "acceder" a atributos no existentes en nuestro objeto.
+      // Pero este campo no se puede inicializar de esta manera, por lo que lanzara una excepcion.
+
+      exampleOne = 'a';
+      // Una ventaja del tipo dinamico es que se puede cambiar su valor por cualquier tipo de dato en cualquier momento.
+    }
+
+    static void ExpandoObjectExample() {
+      dynamic user = new System.Dynamic.ExpandoObject();  // NET nos ofrece una clase especifica para ayudarnos a utilizar tipos anonimos.
+      user.Name = "John Doe";                             // De esta manera es posible crear nuevos campos cuando lo deseamos.
+      user.Age = 27;                                      // El tipo de dato aun asi debe declararse como dinamico.
+      user.PhoneNumber = new System.Dynamic.ExpandoObject();  // Incluso se puede anidar.
+      user.PhoneNumber.Type = "Cell";
+      user.PhoneNumber.Number = "011-15-xxxx-yyyy";
+      // Tambien se puede agregar metodos.
+      user.Describe = (Func<String>)(() => { return $"{user.Name}, Age:{user.Age}, contact:{user.PhoneNumber.Number}"; });
+
+      Console.WriteLine(user.Describe());
+
+      // La clase ExpandoObject es basicamente un diccionario, donde cada atributo o metodo  nuevo es un par de clave (nombre)
+      // y valor (el valor propio del nuevo campo).
+      // De esta manera, podemos recorrer cada campo de nuestro objeto con un foreach.
+      foreach (KeyValuePair<string, object> kvp in user) {
+        Console.WriteLine(kvp.Key + ": " + kvp.Value);
+      }
+    }
   }
 }
