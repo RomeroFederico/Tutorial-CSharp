@@ -37,5 +37,54 @@ public class Program {
     // Por lo que podemos seguir modificando el origen, por lo que LINQ trabajara con la version mas actualizada. 
     foreach (var name in moreShortNames)
       Console.WriteLine(name);
+
+    // Select() nos permite tomar los datos y transformarlos a nuestro gusto.
+    List<User> users = new List<User>() {
+      new User() { Name = "John Doe", Age = 42 },  
+      new User() { Name = "Jane Doe", Age = 34 },  
+      new User() { Name = "Joe Doe", Age = 8 },  
+      new User() { Name = "Another Doe", Age = 15 },
+    };
+
+    // El valor retornado sera cada elemento que compondra nuestra lista final.
+    List<string> names = users.Select(user => user.Name).ToList();
+    var usersWithAnonymousType = names.Select(name => new { Name = name });
+    // CON QUERY:
+    var usersWithAnonymousTypeQ = (from name in names select new { Name = name }).ToList();
+
+    foreach (var user in usersWithAnonymousType)
+      Console.WriteLine(user.Name);
+
+    // GroupBy() nos permite agrupar datos de acuerdo al valor retornado por el metodo lamda.
+    // Esto creara una lista con objetos, donde cada uno tendra la propiedad Key con el valor previamente retornado,
+    // y los demas objetos podran ser recorridos, ya que implementan la interfaz IEnumerable.
+    var usersGroupedByAge = users.GroupBy(user => GetGroupAge(user));
+    foreach (var userGroup in usersGroupedByAge) {
+      Console.WriteLine($"userGroup: {userGroup.Key}");
+      foreach (var user in userGroup)
+        Console.WriteLine($"user: {user.Name}, age: {user.Age}");
+    }
+
+    // Es posible crear llaves compuestas.
+    var usersGroupedByAgeAndFirstLetter= users.GroupBy(user => GetGroup(user));
+    foreach (var userGroup in usersGroupedByAgeAndFirstLetter) {
+      Console.WriteLine($"GroupAge: {userGroup.Key.GroupAge}, FirstLetter: {userGroup.Key.FirstLetter}");
+      foreach (var user in userGroup)
+        Console.WriteLine($"user: {user.Name}, age: {user.Age}");
+    }
+  }
+
+  public static string GetGroupAge(User oneUser) {
+    return oneUser.Age >= 18 ? "Adult" : "Minor";
+  }
+
+  public static dynamic GetGroup(User oneUser) {
+    return new { GroupAge = GetGroupAge(oneUser), FirstLetter = oneUser.Name.ElementAt(0) };
+  }
+
+  public class User  
+  {  
+    public string Name { get; set; }  
+    public int Age { get; set; }  
   }
 }
